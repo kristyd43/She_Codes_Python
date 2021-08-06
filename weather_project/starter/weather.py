@@ -69,20 +69,29 @@ def find_max(weather_data):
 
 
 def generate_summary(weather_data):
-    mini = list(weather_data[1])
+    celsmintemp = []
+    for item in weather_data:
+        celsmintemp.append(item[1])
+    mini, miniposition = find_min(celsmintemp)
     celsmin = convert_f_to_c(mini)
-    maxi = list(weather_data[2])
-    celsmax = convert_f_to_c(maxi)
-    date = list(weather_data[0])
-    fdate = convert_date(date)
-    minmin = min(mini)
-    maxmax = max(maxi)
-    return (celsmin, celsmax, fdate, minmin, maxmax)
 
-print(f"The lowest temperature will be {generate_summary(0)}°C, and will occur on {generate_summary()}")
-print(f"The highest temperature will be {generate_summary[1]}°C, and will occur on{generate_summary[2]}")
-print(f"The average low this week is {generate_summary[3]}°C")
-print(f"The average hight this week is {generate_summary[4]}°C")
+    celsmaxtemp = []
+    for item in weather_data:
+        celsmaxtemp.append(item[2])
+    maxi, maxiposition = find_max(celsmaxtemp)
+    celsmax = convert_f_to_c(maxi)
+
+    mindate = convert_date(weather_data[miniposition][0])
+    maxdate = convert_date(weather_data[maxiposition][0])
+
+    
+    summary = ""
+    summary += (f"{len(celsmintemp)} Day Overview\n")
+    summary += (f"  The lowest temperature will be {format_temperature(celsmin)}, and will occur on {mindate}.\n")
+    summary += (f"  The highest temperature will be {format_temperature(celsmax)}, and will occur on {maxdate}.\n")
+    summary += (f"  The average low this week is {format_temperature(convert_f_to_c(calculate_mean(celsmintemp)))}.\n")
+    summary += (f"  The average high this week is {format_temperature(convert_f_to_c(calculate_mean(celsmaxtemp)))}.\n")
+    return summary
 
     #The lowest temperature will be 9.4°C, and will occur on Friday 02 July 2021.
     #The highest temperature will be 20.0°C, and will occur on Saturday 03 July 2021.
@@ -92,6 +101,7 @@ print(f"The average hight this week is {generate_summary[4]}°C")
 
 
 def generate_daily_summary(weather_data):
+    
     """Outputs a daily summary for the given weather data.
 
     Args:
@@ -99,4 +109,9 @@ def generate_daily_summary(weather_data):
     Returns:
         A string containing the summary information.
     """
-    pass
+    summary = ""
+    for item in weather_data:
+        summary += (f"---- {convert_date(item[0])} ----\n")
+        summary += (f"  Minimum Temperature: {format_temperature(convert_f_to_c(item[1]))}\n")  
+        summary += (f"  Maximum Temperature: {format_temperature(convert_f_to_c(item[2]))}\n\n")  
+    return summary
